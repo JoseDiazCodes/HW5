@@ -180,7 +180,11 @@ public class QuestionnaireImpl implements Questionnaire {
    * @return the new questionnaire
    */
   @Override
-  public Questionnaire filter(Predicate<Question> pq) {
+  public Questionnaire filter(Predicate<Question> pq) throws IllegalArgumentException {
+    if (pq == null) {
+      throw new IllegalArgumentException("Predicate cannot be null");
+    }
+
     Questionnaire filtered = new QuestionnaireImpl();
 
     // loop through each entry (key-value pair) in our map
@@ -210,7 +214,11 @@ public class QuestionnaireImpl implements Questionnaire {
    * @param comp a comparator for Question
    */
   @Override
-  public void sort(Comparator<Question> comp) {
+  public void sort(Comparator<Question> comp) throws IllegalArgumentException {
+    if (comp == null) {
+      throw new IllegalArgumentException("Comparator cannot be null");
+    }
+
     // first sort the questions list by comparator
     questions.sort(comp);
 
@@ -239,7 +247,10 @@ public class QuestionnaireImpl implements Questionnaire {
    * @return the summary value
    */
   @Override
-  public <R> R fold(BiFunction<Question, R, R> bf, R seed) {
+  public <R> R fold(BiFunction<Question, R, R> bf, R seed) throws IllegalArgumentException {
+    if (bf == null) {
+      throw new IllegalArgumentException("BiFunction cannot be null");
+    }
     R result = seed;
     for (Question question : questions) {
       result = bf.apply(question, result);

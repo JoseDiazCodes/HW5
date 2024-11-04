@@ -1,6 +1,6 @@
 package questionnaire;
 
-class Likert extends AbstractQuestion {
+public class Likert extends AbstractQuestion {
   public Likert(String prompt, boolean required) {
     super(prompt, required);
   }

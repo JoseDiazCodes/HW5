@@ -1,5 +1,5 @@
 package questionnaire;
-class ShortAnswer extends AbstractQuestion {
+public class ShortAnswer extends AbstractQuestion {
   private static final int MAX_LENGTH = 280;
 
   public ShortAnswer(String prompt, boolean required) {

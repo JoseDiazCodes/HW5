@@ -1,6 +1,6 @@
 package questionnaire;
 
-class YesNo extends AbstractQuestion {
+public class YesNo extends AbstractQuestion {
   public YesNo(String prompt, boolean required) {
     super(prompt, required);
   }

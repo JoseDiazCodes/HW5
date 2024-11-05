@@ -1,21 +1,24 @@
 package questionnaire;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+
 /**
  * Represents a collection of {@link Question}s, forming a questionnaire.
  */
+
 public interface Questionnaire {
   /**
    * Add a question to the questionnaire.
    *
    * @param identifier a name for the question <b>unique</b> within this
-  questionnaire. Not null
-   * or empty.
+  questionnaire. Not null or empty
    * @param q the {@link Question} to be added to the questionnaire
    */
+
   void addQuestion(String identifier, Question q);
   /**
    * Remove the question with the given identifier from the questionnaire.
@@ -24,6 +27,7 @@ public interface Questionnaire {
    * @throws NoSuchElementException if there is no question with the given
   identifier.
    */
+
   void removeQuestion(String identifier);
   /**
    * Get the question with the given number, based on the order in which it was
@@ -36,6 +40,7 @@ public interface Questionnaire {
    * @return the question
    * @throws IndexOutOfBoundsException if there is no such question num
    */
+
   Question getQuestion(int num);
   /**
    * Get the question with the given identifier (question having been previously
@@ -46,30 +51,35 @@ public interface Questionnaire {
    * @return the question
    * @throws NoSuchElementException if there is no question with the identifier
    */
+
   Question getQuestion(String identifier);
   /**
    * Return a list of all required questions in the questionnaire.
    *
    * @return the required questions.
    */
+
   List<Question> getRequiredQuestions();
   /**
    * Return a list of all optional questions in the questionnaire.
    *
    * @return the optional questions.
    */
+
   List<Question> getOptionalQuestions();
   /**
    * Report if all required questions have some non-empty answer.
    *
    * @return true if all required questions have responses, false otherwise.
    */
+
   boolean isComplete();
   /**
    * Return a list of just the responses to all the questions in the questionnaire.
    *
    * @return the responses
    */
+
   List<String> getResponses();
   /**
    * Produce a new questionnaire containing just the questions where the given
@@ -82,6 +92,7 @@ public interface Questionnaire {
    * @param pq the predicate
    * @return the new questionnaire
    */
+
   Questionnaire filter(Predicate<Question> pq);
   /**
    * Sort the questions according to the given comparator. Return values from
@@ -89,6 +100,7 @@ public interface Questionnaire {
    *
    * @param comp a comparator for Question
    */
+
   void sort(Comparator<Question> comp);
   /**
    * Produce a single summary value based on the given folding function and
@@ -99,6 +111,7 @@ public interface Questionnaire {
    * @param <R> the return type
    * @return the summary value
    */
+
   <R> R fold(BiFunction<Question, R, R> bf, R seed);
   /**
    * Convert the questionnaire into a single string in the format of
@@ -120,5 +133,6 @@ public interface Questionnaire {
    *
    * @return the questionnaire as a String
    */
+
   String toString();
 }

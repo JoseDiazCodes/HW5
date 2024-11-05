@@ -9,22 +9,32 @@ import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+
+/** List to maintain order of questions. */
 public class QuestionnaireImpl implements Questionnaire {
-  /**
-   * Add a question to the questionnaire.
-   *
-   * @param identifier a name for the question <b>unique</b> within this
-   *                   questionnaire. Not null
-   *                   or empty.
-   * @param q          the {@link Question} to be added to the questionnaire
-   */
   private final List<Question> questions;
+
+  /** Map of identifiers to their positions in the questions list for O(1) lookup. */
   private final Map<String, Integer> questionMap;
 
+  /**
+   * Constructs an empty questionnaire.
+   * Initializes both the list of questions and the identifier-to-index mapping.
+   */
   public QuestionnaireImpl() {
     this.questions = new ArrayList<>();
     this.questionMap = new HashMap<>();
   }
+
+  /**
+   * Adds a question to the questionnaire with a unique identifier.
+   * The question is added to the end of the questionnaire, and its position
+   * is mapped to the identifier for fast lookup.
+   *
+   * @param identifier a unique identifier for the question, must not be null or empty
+   * @param q the question to add
+   * @throws IllegalArgumentException if the identifier is null, empty, or already exists
+   */
   @Override
   public void addQuestion(String identifier, Question q) {
     if (identifier == null || identifier.isEmpty()) {
@@ -63,7 +73,7 @@ public class QuestionnaireImpl implements Questionnaire {
     // and subtract the value by 1 to update all the indexes after the one that was removed.
     for (Map.Entry<String, Integer> mapEntry : questionMap.entrySet()) {
       if (mapEntry.getValue() > index) {
-          questionMap.put(mapEntry.getKey(), mapEntry.getValue()-1);
+        questionMap.put(mapEntry.getKey(), mapEntry.getValue() - 1);
       }
     }
   }
@@ -85,7 +95,7 @@ public class QuestionnaireImpl implements Questionnaire {
       throw new IndexOutOfBoundsException("No valid question with that index");
     }
     // account for zero based index
-    return questions.get(num-1);
+    return questions.get(num - 1);
   }
 
   /**
@@ -258,6 +268,14 @@ public class QuestionnaireImpl implements Questionnaire {
     return result;
   }
 
+  /**
+   * Returns a string representation of the questionnaire.
+   * Format: Each question-answer pair is formatted as:
+   * "Question: [prompt]\n\nAnswer: [answer]"
+   * Pairs are separated by "\n\n", with no trailing newlines after the last answer.
+   *
+   * @return the formatted string representation, or empty string if questionnaire is empty
+   */
   @Override
   public String toString() {
     if (questions.isEmpty()) {

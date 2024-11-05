@@ -6,7 +6,7 @@ abstract class AbstractQuestion implements Question {
   protected String answer;
 
   protected AbstractQuestion(String prompt, boolean required)
-  throws IllegalArgumentException {
+              throws IllegalArgumentException {
     if (prompt == null || prompt.isEmpty()) {
       throw new IllegalArgumentException("Prompt cannot be null or empty");
     }

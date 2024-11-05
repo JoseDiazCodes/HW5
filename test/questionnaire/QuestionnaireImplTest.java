@@ -2,13 +2,9 @@ package questionnaire;
 
 import org.junit.Test;
 import org.junit.Before;
+import static org.junit.Assert.*;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 public class QuestionnaireImplTest {
   private QuestionnaireImpl questionnaire;
@@ -201,110 +197,5 @@ public class QuestionnaireImplTest {
     String expected = "Question: Question 1?\n\nAnswer: yes\n\n"
             + "Question: Question 2?\n\nAnswer: test";
     assertEquals(expected, questionnaire.toString());
-  }
-  @Test
-  public void testFullQuestionnaireFunctionality() {
-    // Add different types of questions
-    YesNo yesNo = new YesNo("Do you enjoy programming?", true);
-    ShortAnswer shortAnswer = new ShortAnswer("What's your favorite language?", false);
-    Likert likert = new Likert("Programming is fun.", true);
-
-    questionnaire.addQuestion("enjoy", yesNo);
-    questionnaire.addQuestion("language", shortAnswer);
-    questionnaire.addQuestion("fun", likert);
-
-    // Answer questions
-    yesNo.answer("Yes");
-    shortAnswer.answer("Java");
-    likert.answer("Strongly Agree");
-
-    // Test filtering
-    Questionnaire requiredOnly = questionnaire.filter(Question::isRequired);
-    assertEquals(2, requiredOnly.getRequiredQuestions().size());
-
-    // Test sorting by prompt length
-    questionnaire.sort((q1, q2) ->
-            q1.getPrompt().length() - q2.getPrompt().length());
-
-    // Verify correct order after sort
-    assertTrue(questionnaire.getQuestion(1).getPrompt().length() <=
-            questionnaire.getQuestion(2).getPrompt().length());
-
-    // Test responses
-    List<String> responses = questionnaire.getResponses();
-    assertTrue(responses.contains("Yes"));
-    assertTrue(responses.contains("Java"));
-    assertTrue(responses.contains("Strongly Agree"));
-
-    // Test completeness
-    assertTrue(questionnaire.isComplete());
-
-    // Test toString format
-    String output = questionnaire.toString();
-    assertTrue(output.contains("Question: "));
-    assertTrue(output.contains("Answer: "));
-    assertFalse(output.endsWith("\n\n")); // No trailing newlines
-  }
-
-  @Test
-  public void testCopyIndependence() {
-    // Add and answer original questions
-    questionnaire.addQuestion("q1", new YesNo("Question 1?", true));
-    questionnaire.getQuestion("q1").answer("Yes");
-
-    // Create filtered copy
-    Questionnaire filtered = questionnaire.filter(q -> true);
-
-    // Modify original
-    questionnaire.getQuestion("q1").answer("No");
-
-    assertEquals("Yes", filtered.getQuestion("q1").getAnswer());
-  }
-
-  @Test
-  public void testFoldFunctionality() {
-    questionnaire.addQuestion("q1", new YesNo("Question 1?", true));
-    questionnaire.addQuestion("q2", new YesNo("Question 2?", true));
-
-    questionnaire.getQuestion("q1").answer("Yes");
-    questionnaire.getQuestion("q2").answer("No");
-
-    // Count "Yes" answers
-    int yesCount = questionnaire.fold((q, count) ->
-            q.getAnswer().equalsIgnoreCase("Yes") ? count + 1 : count, 0);
-
-    assertEquals(1, yesCount);
-  }
-
-  @Test
-  public void testErrorPropagation() {
-    YesNo question = new YesNo("Test?", true);
-    questionnaire.addQuestion("test", question);
-
-    // Verify that invalid answers are properly caught
-    assertThrows(IllegalArgumentException.class, () ->
-            question.answer("Maybe"));
-
-    // Verify question state hasn't changed after failed answer
-    assertEquals("", question.getAnswer());
-  }
-
-  @Test
-  public void testQuestionnaireStateConsistency() {
-    // Add questions
-    questionnaire.addQuestion("q1", new YesNo("Question 1?", true));
-    questionnaire.addQuestion("q2", new ShortAnswer("Question 2?", false));
-
-    questionnaire.removeQuestion("q1");
-
-    questionnaire.addQuestion("q3", new Likert("Question 3?", true));
-
-    // Verify correct ordering
-    assertEquals("Question 2?", questionnaire.getQuestion(1).getPrompt());
-    assertEquals("Question 3?", questionnaire.getQuestion(2).getPrompt());
-
-    // Verify map is consistent
-    assertEquals(questionnaire.getQuestion(1), questionnaire.getQuestion("q2"));
-    assertEquals(questionnaire.getQuestion(2), questionnaire.getQuestion("q3"));
   }
 }

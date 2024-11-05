@@ -1,15 +1,30 @@
 package questionnaire;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
+/**
+ * Test class for AbstractQuestion functionality.
+ * Uses a concrete implementation (TestQuestion) to verify the behavior
+ * of the abstract class's methods and constructors.
+ */
 public class AbstractQuestionTest {
-  // Concrete implementation for testing abstract class
+  /**
+   * A concrete implementation of AbstractQuestion used for testing.
+   * Provides minimal implementations of abstract methods to verify
+   * base class functionality.
+   */
   private class TestQuestion extends AbstractQuestion {
+    /**
+     * Constructs a TestQuestion with the given prompt and required status.
+     *
+     * @param prompt the question text
+     * @param required whether the question is required
+     */
     public TestQuestion(String prompt, boolean required) {
       super(prompt, required);
     }
@@ -29,6 +44,9 @@ public class AbstractQuestionTest {
     }
   }
 
+  /**
+   * Tests that a question can be constructed with valid parameters.
+   */
   @Test
   public void testValidConstruction() {
     Question q = new TestQuestion("Test prompt", true);
@@ -37,34 +55,54 @@ public class AbstractQuestionTest {
     assertEquals("", q.getAnswer());
   }
 
+  /**
+   * Tests that construction fails when prompt is null.
+   * @throws IllegalArgumentException expected when prompt is null
+   */
   @Test(expected = IllegalArgumentException.class)
   public void testNullPrompt() {
     new TestQuestion(null, true);
   }
 
+  /**
+   * Tests that construction fails when prompt is empty.
+   * @throws IllegalArgumentException expected when prompt is empty
+   */
   @Test(expected = IllegalArgumentException.class)
   public void testEmptyPrompt() {
     new TestQuestion("", false);
   }
 
+  /**
+   * Tests that isRequired returns false when question is optional.
+   */
   @Test
   public void testRequiredFalse() {
     Question q = new TestQuestion("Test prompt", false);
     assertFalse(q.isRequired());
   }
 
+  /**
+   * Tests that getPrompt returns the correct prompt string.
+   */
   @Test
   public void testGetPrompt() {
     Question q = new TestQuestion("Test prompt", true);
     assertEquals("Test prompt", q.getPrompt());
   }
 
+  /**
+   * Tests that initial answer is empty string.
+   */
   @Test
   public void testInitialAnswer() {
     Question q = new TestQuestion("Test prompt", true);
     assertEquals("", q.getAnswer());
   }
 
+  /**
+   * Tests setting and getting an answer.
+   */
   @Test
   public void testAnswerAndGetAnswer() {
     Question q = new TestQuestion("Test prompt", true);
@@ -72,12 +110,19 @@ public class AbstractQuestionTest {
     assertEquals("test answer", q.getAnswer());
   }
 
+  /**
+   * Tests that answering with null throws exception.
+   * @throws IllegalArgumentException expected when answer is null
+   */
   @Test(expected = IllegalArgumentException.class)
   public void testNullAnswer() {
     Question q = new TestQuestion("Test prompt", true);
     q.answer(null);
   }
 
+  /**
+   * Tests deep copy functionality including independence of copies.
+   */
   @Test
   public void testCopy() {
     TestQuestion original = new TestQuestion("Test prompt", true);
@@ -99,6 +144,9 @@ public class AbstractQuestionTest {
     assertEquals("new answer", copy.getAnswer());
   }
 
+  /**
+   * Tests that multiple answers can be set sequentially.
+   */
   @Test
   public void testMultipleAnswers() {
     Question q = new TestQuestion("Test prompt", true);
@@ -110,6 +158,9 @@ public class AbstractQuestionTest {
     assertEquals("second answer", q.getAnswer());
   }
 
+  /**
+   * Tests that prompt remains unchanged when original string is modified.
+   */
   @Test
   public void testPromptImmutable() {
     String prompt = "Test prompt";
@@ -120,6 +171,9 @@ public class AbstractQuestionTest {
     assertEquals("Test prompt", q.getPrompt());
   }
 
+  /**
+   * Tests that required status remains unchanged when original boolean is modified.
+   */
   @Test
   public void testRequiredImmutable() {
     boolean required = true;
